@@ -1,0 +1,1 @@
+import {defineConfig}from'vite';export default defineConfig({server:{proxy:{'/api':'http://localhost:8787','/':require('http').createServer((req,res)=>{res.end('OK')})}}})
