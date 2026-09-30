@@ -1,6 +1,9 @@
-name="dreamdrop-ai"
-main="worker.js"
-compatibility_date="2024-11-01"
+name = "dreamdrop-ai-worker"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+[env.production]
+route = "https://api.dreamdrop.dev/api/*"
 
 [ai]
-binding="AI"
+binding = "AI"

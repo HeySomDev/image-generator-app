@@ -1,1 +1,18 @@
-import {defineConfig}from'vite';export default defineConfig({server:{proxy:{'/api':'http://localhost:8787','/':require('http').createServer((req,res)=>{res.end('OK')})}}})
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8787',
+        changeOrigin: true
+      }
+    }
+  },
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: { drop_console: true }
+    }
+  }
+});
