@@ -1,56 +1,63 @@
 export function renderHome(container) {
-  container.innerHTML = `
-    <div class="bg-orb orb-1"></div>
-    <div class="bg-orb orb-2"></div>
-    <div class="bg-orb orb-3"></div>
-    
+  const mainDiv = document.createElement('div');
+  mainDiv.innerHTML = `
     <div class="container">
       <div class="header">
-        <div class="logo">✨ DreamDrop AI</div>
+        <div class="logo">✨ DreamDrop AI Pro</div>
         <div class="nav-buttons">
           <button class="btn btn-primary" onclick="navigateTo('text-to-image')">
-            🎨 Text to Image
+            🎨 Generate Image
           </button>
           <button class="btn btn-primary" onclick="navigateTo('image-editor')">
-            📸 Edit Image
+            📸 Transform Image
           </button>
         </div>
       </div>
       
-      <div class="container">
-        <h2 class="page-title">Welcome to DreamDrop AI</h2>
-        <p class="page-subtitle">Transform your imagination into stunning visuals using AI</p>
-        
-        <div class="grid">
-          <div class="feature-card" onclick="navigateTo('text-to-image')">
-            <span class="feature-icon">✍️</span>
-            <h3 class="feature-title">Text to Image</h3>
-            <p class="feature-desc">Describe what you want, and AI creates it for you</p>
-          </div>
-          
-          <div class="feature-card" onclick="navigateTo('image-editor')">
-            <span class="feature-icon">🎭</span>
-            <h3 class="feature-title">Image Editor</h3>
-            <p class="feature-desc">Upload an image and ask AI to transform it</p>
-          </div>
-          
-          <div class="feature-card">
-            <span class="feature-icon">⚡</span>
-            <h3 class="feature-title">Lightning Fast</h3>
-            <p class="feature-desc">Ultra-efficient Cloudflare Workers AI</p>
-          </div>
+      <h2 class="page-title">Welcome to DreamDrop AI Pro</h2>
+      <p class="page-subtitle">Transform your imagination into stunning visuals using AI-powered generation</p>
+      
+      <div class="grid">
+        <div class="feature-card" onclick="navigateTo('text-to-image')">
+          <span class="feature-icon">✍️</span>
+          <h3 class="feature-title">Text to Image</h3>
+          <p class="feature-desc">Describe anything and AI creates it instantly</p>
         </div>
         
-        <div class="card">
-          <h3 style="color: var(--primary); margin-top: 0;">Quick Tips:</h3>
-          <ul style="color: var(--text-secondary); line-height: 1.8;">
-            <li>Be specific with your descriptions for better results</li>
-            <li>Mention the art style, mood, and colors you want</li>
-            <li>You can ask for specific transformations (e.g., "add a saree", "make it glowing")</li>
-            <li>Upload reference images for guidance</li>
+        <div class="feature-card" onclick="navigateTo('image-editor')">
+          <span class="feature-icon">🎭</span>
+          <h3 class="feature-title">AI Image Editor</h3>
+          <p class="feature-desc">Upload and transform images with AI magic</p>
+        </div>
+        
+        <div class="feature-card">
+          <span class="feature-icon">⚡</span>
+          <h3 class="feature-title">Ultra-Fast</h3>
+          <p class="feature-desc">Powered by Cloudflare Workers AI</p>
+        </div>
+        
+        <div class="feature-card">
+          <span class="feature-icon">💰</span>
+          <h3 class="feature-title">Low Cost</h3>
+          <p class="feature-desc">Efficient token usage, maximum results</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h3 style="color: var(--primary); margin-bottom: 16px;">💡 How to Use:</h3>
+        <div style="color: var(--text-secondary); line-height: 1.8;">
+          <p><strong>Text to Image:</strong> Type what you want to see. E.g., "A woman wearing a red saree in a golden garden at sunset"</p>
+          <p><strong>Transform Image:</strong> Upload a photo and describe what to change. E.g., "Add a beautiful blue saree with golden embroidery"</p>
+          <p><strong>Pro Tips:</strong></p>
+          <ul>
+            <li>Be specific with details for better results</li>
+            <li>Mention style: cinematic, painting, 3D render, etc.</li>
+            <li>Add lighting: golden hour, studio light, neon glow</li>
+            <li>Use reference images to guide the AI</li>
           </ul>
         </div>
       </div>
     </div>
   `;
+  container.appendChild(mainDiv);
 }

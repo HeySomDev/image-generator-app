@@ -1,54 +1,77 @@
 export function renderImageEditor(container) {
-  let selectedImage = '';
+  const mainDiv = document.createElement('div');
   
-  container.innerHTML = `
-    <div class="bg-orb orb-1"></div>
-    <div class="bg-orb orb-2"></div>
-    <div class="bg-orb orb-3"></div>
-    
+  mainDiv.innerHTML = `
     <div class="container">
       <div class="header">
-        <div class="logo">✨ DreamDrop AI</div>
+        <div class="logo">✨ DreamDrop AI Pro</div>
         <div class="nav-buttons">
-          <button class="btn btn-secondary" onclick="navigateTo('home')">← Back</button>
+          <button class="btn btn-secondary" onclick="navigateTo('home')">← Back Home</button>
         </div>
       </div>
       
-      <h2 class="page-title">📸 Edit Image with AI</h2>
-      <p class="page-subtitle">Upload an image and tell AI what to transform</p>
+      <h2 class="page-title">📸 Transform Your Image</h2>
+      <p class="page-subtitle">Upload a photo and describe how AI should change it</p>
       
-      <div class="card">
-        <div class="form-group">
-          <label>Upload Your Image</label>
-          <div class="dropzone" id="dropzone">
-            <span class="dropzone-icon">📸</span>
-            <p class="dropzone-text">Click or drag your image here</p>
+      <div class="two-column">
+        <div>
+          <div class="card">
+            <div class="form-group">
+              <label>Upload Your Image</label>
+              <div class="dropzone" id="dropzone">
+                <span class="dropzone-icon">📸</span>
+                <p class="dropzone-text">Click or drag your image here</p>
+              </div>
+              <img id="imagePreview" class="preview-image" style="display: none;">
+            </div>
+            
+            <div class="form-group">
+              <label>What should I change?</label>
+              <textarea id="editPrompt" placeholder="Examples:\n- Add a beautiful red saree with golden embroidery\n- Make the background a magical garden\n- Add glowing effects and make it cinematic\n- Change the lighting to golden sunset\n- Make the style more cinematic and detailed"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label>Quality Level</label>
+              <select id="qualitySelect">
+                <option value="professional">Professional</option>
+                <option value="cinematic">Cinematic</option>
+                <option value="artistic">Artistic</option>
+                <option value="realistic">Realistic</option>
+              </select>
+            </div>
+            
+            <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" id="transformBtn">
+              🎭 Transform Image
+            </button>
           </div>
-          <img id="imagePreview" class="preview-image" hidden>
         </div>
         
-        <div class="form-group">
-          <label>What to Change? (Be Specific!)</label>
-          <textarea id="editPrompt" placeholder="Example: Add a beautiful red saree to this person, make the background a golden garden, add glowing effects"></textarea>
+        <div>
+          <div class="result-area" id="resultArea" style="display: none;">
+            <div id="resultContent"></div>
+          </div>
+          <div id="placeholderArea" class="card" style="text-align: center; height: 400px; display: flex; align-items: center; justify-content: center;">
+            <div>
+              <div style="font-size: 64px; margin-bottom: 16px;">🎭</div>
+              <p style="color: var(--text-secondary);">Transformed image will appear here</p>
+            </div>
+          </div>
         </div>
-        
-        <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" id="editBtn">
-          ✨ Transform Image
-        </button>
-      </div>
-      
-      <div class="result-area" id="resultArea" style="display: none;">
-        <div id="resultContent"></div>
       </div>
     </div>
   `;
   
-  const dropzone = container.querySelector('#dropzone');
+  container.appendChild(mainDiv);
+  setupImageEditor(container, mainDiv);
+}
+
+function setupImageEditor(container, mainDiv) {
+  let selectedImage = '';
+  const dropzone = mainDiv.querySelector('#dropzone');
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.accept = 'image/*';
-  fileInput.hidden = true;
-  
+  fileInput.style.display = 'none';
   dropzone.appendChild(fileInput);
   
   dropzone.addEventListener('click', () => fileInput.click());
@@ -60,47 +83,48 @@ export function renderImageEditor(container) {
   dropzone.addEventListener('drop', (e) => {
     e.preventDefault();
     dropzone.classList.remove('dragover');
-    const file = e.dataTransfer.files[0];
-    handleImageUpload(file);
+    handleImageUpload(e.dataTransfer.files[0]);
   });
-  
-  fileInput.addEventListener('change', (e) => {
-    handleImageUpload(e.target.files[0]);
-  });
+  fileInput.addEventListener('change', (e) => handleImageUpload(e.target.files[0]));
   
   function handleImageUpload(file) {
-    if (!file) {
-      alert('Please select an image!');
+    if (!file || !file.type.startsWith('image/')) {
+      alert('Please select a valid image');
       return;
     }
     const reader = new FileReader();
     reader.onload = (e) => {
       selectedImage = e.target.result;
-      container.querySelector('#imagePreview').src = selectedImage;
-      container.querySelector('#imagePreview').hidden = false;
+      mainDiv.querySelector('#imagePreview').src = selectedImage;
+      mainDiv.querySelector('#imagePreview').style.display = 'block';
     };
     reader.readAsDataURL(file);
   }
   
-  container.querySelector('#editBtn').addEventListener('click', async () => {
+  mainDiv.querySelector('#transformBtn').addEventListener('click', async () => {
     if (!selectedImage) {
       alert('Please upload an image first!');
       return;
     }
     
-    const editPrompt = container.querySelector('#editPrompt').value.trim();
+    const editPrompt = mainDiv.querySelector('#editPrompt').value.trim();
+    const quality = mainDiv.querySelector('#qualitySelect').value;
+    
     if (!editPrompt) {
-      alert('Please tell me what to change!');
+      alert('Please describe what you want to change!');
       return;
     }
     
-    const btn = container.querySelector('#editBtn');
+    const fullPrompt = `Transform this image: ${editPrompt}, ${quality} quality, highly detailed, professional`;
+    const btn = mainDiv.querySelector('#transformBtn');
     btn.disabled = true;
-    btn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 10px;"></div>Transforming...';
+    btn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px; margin-right: 10px; display: inline-block;"></div>Transforming...';
     
-    const resultArea = container.querySelector('#resultArea');
-    const resultContent = container.querySelector('#resultContent');
+    const resultArea = mainDiv.querySelector('#resultArea');
+    const placeholderArea = mainDiv.querySelector('#placeholderArea');
+    placeholderArea.style.display = 'none';
     resultArea.style.display = 'block';
+    const resultContent = mainDiv.querySelector('#resultContent');
     resultContent.innerHTML = '<div class="loading"><div class="spinner"></div><p>Applying your transformations...</p></div>';
     
     try {
@@ -108,14 +132,13 @@ export function renderImageEditor(container) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: editPrompt,
+          prompt: fullPrompt,
           referenceImage: selectedImage,
           useReference: true
         })
       });
       
       if (!response.ok) throw new Error('Transformation failed');
-      
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       
@@ -124,7 +147,7 @@ export function renderImageEditor(container) {
         <button class="btn btn-primary" onclick="{
           const a = document.createElement('a');
           a.href = '${url}';
-          a.download = 'dreamdrop-edited-' + Date.now() + '.png';
+          a.download = 'dreamdrop-transformed-' + Date.now() + '.png';
           a.click();
         }">⬇️ Download</button>
       `;
@@ -132,7 +155,7 @@ export function renderImageEditor(container) {
       resultContent.innerHTML = `<div class="error">❌ ${error.message}</div>`;
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '✨ Transform Image';
+      btn.innerHTML = '🎭 Transform Image';
     }
   });
 }
